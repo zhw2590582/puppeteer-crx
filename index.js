@@ -19,6 +19,7 @@ module.exports = async (
   }
 ) => {
   if (typeof src !== "string") throw new Error("Missing path");
+  if (typeof option !== "object") throw new Error("Missing option");
   const manifest = path.join(src, "manifest.json");
   if (!fs.existsSync(manifest)) throw new Error("Missing manifest.json");
   const pathArr = src.split(path.sep);
@@ -29,7 +30,7 @@ module.exports = async (
   const zipFile = path.join(parentDir, `${fileName}.zip`);
   if (fs.existsSync(crxFile)) fs.unlinkSync(crxFile);
   if (fs.existsSync(pemFile)) fs.unlinkSync(pemFile);
-  if (fs.existsSync(zipFile)) fs.unlinkSync(zipFile);
+  if (option.zip && fs.existsSync(zipFile)) fs.unlinkSync(zipFile);
 
   const browser = await puppeteer.launch({
     headless: false,
@@ -37,6 +38,7 @@ module.exports = async (
   });
   const page = await browser.newPage();
   await page.goto("chrome://extensions");
+
   await page.evaluate(async () => {
     document
       .querySelector("body > extensions-manager")
@@ -76,6 +78,7 @@ module.exports = async (
 
   if (!fs.existsSync(crxFile))
     throw new Error(`Package crx failure in: ${crxFile}`);
+
   if (!fs.existsSync(pemFile))
     throw new Error(`Package pem failure in: ${pemFile}`);
 
