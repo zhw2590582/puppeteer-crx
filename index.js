@@ -1,7 +1,16 @@
 const puppeteer = require("puppeteer");
 const path = require("path");
 const fs = require("fs");
-const zip = require("bestzip");
+const zipFolder = require("zip-folder");
+
+const zipFolderPr = (folder, archive) => {
+  return new Promise((resolve, reject) => {
+    zipFolder(folder, archive, err => {
+      if (err) reject(err);
+      resolve();
+    });
+  });
+};
 
 module.exports = async (
   src,
@@ -74,10 +83,7 @@ module.exports = async (
     throw new Error(`Package pem failure in: ${pemFile}`);
 
   if (option.zip) {
-    await zip({
-      source: src,
-      destination: zipFile
-    });
+    await zipFolderPr(src, zipFile);
     if (!fs.existsSync(zipFile))
       throw new Error(`Package zip failure in: ${zipFile}`);
   }
