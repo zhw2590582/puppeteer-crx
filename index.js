@@ -31,7 +31,10 @@ module.exports = async (
   if (fs.existsSync(pemFile)) fs.unlinkSync(pemFile);
   if (fs.existsSync(zipFile)) fs.unlinkSync(zipFile);
 
-  const browser = await puppeteer.launch({ headless: false });
+  const browser = await puppeteer.launch({
+    headless: false,
+    args: ["--no-sandbox", "--disable-setuid-sandbox"]
+  });
   const page = await browser.newPage();
   await page.goto("chrome://extensions");
   await page.evaluate(async () => {

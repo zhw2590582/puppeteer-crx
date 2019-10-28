@@ -1,6 +1,6 @@
 {
   "name": "puppeteer-crx",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Use puppeteer to package chrome extensions",
   "main": "index.js",
   "scripts": {
