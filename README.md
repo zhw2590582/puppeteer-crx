@@ -14,7 +14,7 @@ $ npm install puppeteer-crx
 
 ```js
 const path = require("path");
-const crx = require("../");
+const crx = require("puppeteer-crx");
 const src = path.resolve(__dirname, "./sample/");
 
 crx(src, {
