@@ -2,4 +2,6 @@ const path = require("path");
 const crx = require("../");
 const src = path.resolve(__dirname, "./sample/");
 
-crx(src);
+crx(src).then(result => {
+  console.log(result);
+});

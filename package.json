@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/zhw2590582/puppeteer-crx#readme",
   "dependencies": {
-    "puppeteer": "^2.0.0"
+    "puppeteer": "^2.0.0",
+    "zip-folder": "^1.0.0"
   }
 }
