@@ -1,28 +1,7 @@
 const puppeteer = require("puppeteer");
 const path = require("path");
 const fs = require("fs");
-const archiver = require("archiver");
-
-const archive = (src, dist) => {
-  return new Promise((resolve, reject) => {
-    var output = fs.createWriteStream(dist);
-    const archive = archiver("zip", {
-      zlib: { level: 9 }
-    });
-    archive.pipe(output);
-    archive.directory(src, false);
-    archive.on("error", err => {
-      reject(err);
-    });
-    output.on("close", () => {
-      resolve();
-    });
-    output.on("end", () => {
-      resolve();
-    });
-    archive.finalize();
-  });
-};
+const zip = require("bestzip");
 
 module.exports = async (
   src,
@@ -95,7 +74,10 @@ module.exports = async (
     throw new Error(`Package pem failure in: ${pemFile}`);
 
   if (option.zip) {
-    await archive(src, zipFile);
+    await zip({
+      source: src,
+      destination: zipFile
+    });
     if (!fs.existsSync(zipFile))
       throw new Error(`Package zip failure in: ${zipFile}`);
   }
