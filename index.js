@@ -1,14 +1,26 @@
 const puppeteer = require("puppeteer");
 const path = require("path");
 const fs = require("fs");
-const zipFolder = require("zip-folder");
+const archiver = require("archiver");
 
-const zipFolderPr = (folder, archive) => {
+const archive = (src, dist) => {
   return new Promise((resolve, reject) => {
-    zipFolder(folder, archive, err => {
-      if (err) reject(err);
+    var output = fs.createWriteStream(dist);
+    const archive = archiver("zip", {
+      zlib: { level: 9 }
+    });
+    archive.pipe(output);
+    archive.directory(src, false);
+    archive.on("error", err => {
+      reject(err);
+    });
+    output.on("close", () => {
       resolve();
     });
+    output.on("end", () => {
+      resolve();
+    });
+    archive.finalize();
   });
 };
 
@@ -83,7 +95,7 @@ module.exports = async (
     throw new Error(`Package pem failure in: ${pemFile}`);
 
   if (option.zip) {
-    await zipFolderPr(src, zipFile);
+    await archive(src, zipFile);
     if (!fs.existsSync(zipFile))
       throw new Error(`Package zip failure in: ${zipFile}`);
   }
