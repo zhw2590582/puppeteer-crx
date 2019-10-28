@@ -1,0 +1,23 @@
+{
+  "name": "puppeteer-crx",
+  "version": "1.0.0",
+  "description": "Use puppeteer to package chrome extensions",
+  "main": "index.js",
+  "scripts": {
+    "test": "node ./test/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zhw2590582/puppeteer-crx.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zhw2590582/puppeteer-crx/issues"
+  },
+  "homepage": "https://github.com/zhw2590582/puppeteer-crx#readme",
+  "dependencies": {
+    "puppeteer": "^2.0.0"
+  }
+}
