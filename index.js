@@ -1,14 +1,23 @@
 const puppeteer = require("puppeteer");
 const path = require("path");
 const fs = require("fs");
-const zipFolder = require("zip-folder");
+const archiver = require("archiver");
 
-const zipFolderPr = (folder, archive) => {
+const zipFolderPr = (src, zipFile) => {
   return new Promise((resolve, reject) => {
-    zipFolder(folder, archive, err => {
-      if (err) reject(err);
+    const output = fs.createWriteStream(zipFile);
+    const archive = archiver("zip", {
+      zlib: { level: 9 }
+    });
+    output.on("close", () => {
       resolve();
     });
+    archive.on("error", err => {
+      reject(err);
+    });
+    archive.pipe(output);
+    archive.directory(src, false);
+    archive.finalize();
   });
 };
 
@@ -76,16 +85,19 @@ module.exports = async (
   await page.waitFor(1000);
   await browser.close();
 
-  if (!fs.existsSync(crxFile))
+  if (!fs.existsSync(crxFile)) {
     throw new Error(`Package crx failure in: ${crxFile}`);
+  }
 
-  if (!fs.existsSync(pemFile))
+  if (!fs.existsSync(pemFile)) {
     throw new Error(`Package pem failure in: ${pemFile}`);
+  }
 
   if (option.zip) {
     await zipFolderPr(src, zipFile);
-    if (!fs.existsSync(zipFile))
+    if (!fs.existsSync(zipFile)) {
       throw new Error(`Package zip failure in: ${zipFile}`);
+    }
   }
 
   return {
