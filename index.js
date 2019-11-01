@@ -24,11 +24,14 @@ const zipFolderPr = (src, zipFile) => {
 module.exports = async (
   src,
   option = {
-    zip: true
+    zip: false,
+    delay: 1000
   }
 ) => {
   if (typeof src !== "string") throw new Error("Missing path");
   if (typeof option !== "object") throw new Error("Missing option");
+  if (typeof option.zip !== "boolean") throw new Error("Missing option.zip");
+  if (typeof option.delay !== "number") throw new Error("Missing option.delay");
   const manifest = path.join(src, "manifest.json");
   if (!fs.existsSync(manifest)) throw new Error("Missing manifest.json");
   const pathArr = src.split(path.sep);
@@ -82,7 +85,7 @@ module.exports = async (
     pack.click();
   });
 
-  await page.waitFor(1000);
+  await page.waitFor(option.delay);
   await browser.close();
 
   if (!fs.existsSync(crxFile)) {

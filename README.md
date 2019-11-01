@@ -19,7 +19,9 @@ const src = path.resolve(__dirname, "./sample/");
 
 crx(src, {
   // Is it also packaged into a zip for chrome web store?
-  zip: true
+  zip: false,
+  // Packing delay time
+  delay: 1000
 }).then(result => {
   console.log(result);
 });
